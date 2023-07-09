@@ -1,8 +1,12 @@
 import React from "react";
 import { BsFillCartCheckFill } from "react-icons/bs";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { addToCart } from "../redux/bazarSlice";
+import { ToastContainer, toast } from "react-toastify";
 
 export const ProductsCards = ({ product }) => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const _id = product.title;
   const idString = (_id) => {
@@ -10,20 +14,22 @@ export const ProductsCards = ({ product }) => {
   };
   const rootId = idString(_id);
   //console.log(rootId);
-  
-  const handleDetails = () => {
-   // console.log("details");
-   navigate(`/product/${rootId}`, {
-    state: {
-      item: product,
-    },
-   });
-  }
 
+  const handleDetails = () => {
+    // console.log("details");
+    navigate(`/product/${rootId}`, {
+      state: {
+        item: product,
+      },
+    });
+  };
 
   return (
     <div className="group relative">
-      <div onClick={ handleDetails } className="w-full h-96 cursor-pointer over overflow-hidden">
+      <div
+        onClick={handleDetails}
+        className="w-full h-96 cursor-pointer over overflow-hidden"
+      >
         <img
           className="w-full h-full object-cover group-hover:scale-125 duration-500"
           src={product.image}
@@ -43,8 +49,26 @@ export const ProductsCards = ({ product }) => {
               <p className="line-through text-gray-500">${product.oldPrice}</p>
               <p className="font-semibold">${product.price}</p>
             </div>
-            <p className="absolute z-20 w-[100px] text-red-900 hover:text-red-700 flex items-center gap-1 top-0 transform -translate-x-32 group-hover:translate-x-0 transition-transform cursor-pointer duration-700">
-              Agregar <span> <BsFillCartCheckFill/> </span>
+            <p
+              onClick={() =>
+                dispatch(
+                  addToCart({
+                    _id: product._id,
+                    title: product.title,
+                    image: product.image,
+                    price: product.price,
+                    quantity: 1,
+                    description: product.description,
+                  })
+                ) & toast.success(`${product.title} agregado`)
+              }
+              className="absolute z-20 w-[100px] text-red-900 hover:text-red-700 flex items-center gap-1 top-0 transform -translate-x-32 group-hover:translate-x-0 transition-transform cursor-pointer duration-700"
+            >
+              Agregar{" "}
+              <span>
+                {" "}
+                <BsFillCartCheckFill />{" "}
+              </span>
             </p>
           </div>
         </div>
@@ -52,11 +76,25 @@ export const ProductsCards = ({ product }) => {
           <p>{product.category}</p>
         </div>
         <div className="absolute top-4 right-0">
-          {
-            product.isNew && <p className="bg-yellow-200 font-bold font-titleFont px-6 py-1">venta</p>
-          }
+          {product.isNew && (
+            <p className="bg-yellow-200 font-bold font-titleFont px-6 py-1">
+              venta
+            </p>
+          )}
         </div>
       </div>
+      < ToastContainer 
+      position="bottom-right"
+      autoClose = {5000}
+      hideProgressBar = {false}
+      newestOnTop = {false}
+      closeOnClick
+      rtl = {false}
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover
+      theme="light"
+      />
     </div>
   );
 };

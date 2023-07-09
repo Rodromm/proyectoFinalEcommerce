@@ -1,6 +1,8 @@
 import React from "react";
 import { cartImg, logoLigth } from "../assets";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { ToastContainer, toast } from "react-toastify";
 
 //documentacion de estilos para tailwindcss
 //https://tailwindcss.com/docs
@@ -9,6 +11,7 @@ import { Link } from "react-router-dom";
 //left leftpx = 1px / 0.5 = 2px / .5*2
 
 export const Header = () => {
+  const productData = useSelector((state) => state.bazar.productData);
   return (
     <div className="w-full h-20 bg-white border-b-[2px] border-b-gray-900 font-titleFont sticky top-0 z-50">
       <div className="max-w-screen-xl h-full mx-auto flex items-center justify-between">
@@ -37,15 +40,17 @@ export const Header = () => {
               Blog
             </li>
           </ul>
+          <Link to="/cart">
           <div className="relative">
             <img className="w-24" src={cartImg} alt="cartImg" />
             <span
               className="absolute w-20 top-12 left-2 text-sm flex items-center
             justify-center font-semibold"
             >
-              0
+              { productData.length }
             </span>
           </div>
+          </Link>
           <img
             className="w-16 h-16 rounded-full"
             src="https://eastlancashirefreemasons.org/wp-content/uploads/2022/11/Manchester-Mason-VWBro-Nolan-Morrison-celebrates-Sixty-Years-in-Freemasonry-Header.jpeg"
@@ -53,6 +58,7 @@ export const Header = () => {
           />
         </div>
       </div>
+     
     </div>
   );
 };

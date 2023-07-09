@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { MdOutlineStar } from "react-icons/md";
+import { useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
+import { addToCart } from "../redux/bazarSlice";
+import { ToastContainer, toast } from "react-toastify";
 //react-redux.js.org quick start
 
 
 export const Product = () => {
+  const dispatch = useDispatch();
   const [details, setDetails] = useState({});
+  let [baseQty, setBaseQty] = useState(1);
   const Location = useLocation();
   useEffect(() => {
     setDetails(Location.state.item);
@@ -51,21 +56,33 @@ export const Product = () => {
           </div>
           <p className="text-base text-gray-500 -mt-3">{details.description}</p>
           <div className="flex gap-4">
+            {/*inicio de botn*/}
             <div className="w-52 flex items-center  justify-between gap-4	border p-3">
               <p className="text-sm">Cantidad</p>
-
-              {/*buttons*/}
               <div className="flex items-center gap-4 text-base font-bold">
-                <button className="border h-5 font-normal text-lg flex items-center justify-center px-2 hover:bg-yellow-200 hover:text-green-500 cursor-pointer duration-500 active:bg-black">
+                <button onClick={ () => setBaseQty(baseQty === 1 ? (baseQty = 1) : baseQty -1) } className="border h-5 font-normal text-lg flex items-center justify-center px-2 hover:bg-yellow-200 hover:text-green-500 cursor-pointer duration-500 active:bg-black">
                   -
                 </button>
-                <span>{1}</span>
-                <button className="border h-5 font-normal text-lg flex items-center justify-center px-2 hover:bg-yellow-200 hover:text-green-500 cursor-pointer duration-500 active:bg-black">
+                <span>{baseQty}</span>
+                <button onClick={ () => setBaseQty(baseQty + 1) } className="border h-5 font-normal text-lg flex items-center justify-center px-2 hover:bg-yellow-200 hover:text-green-500 cursor-pointer duration-500 active:bg-black">
                   +
                 </button>
               </div>
             </div>
-            <button className="bg-yellow-200 px-6 py-3  active:bg-white active:text-yellow-500">
+            <button onClick={ () => dispatch (
+              addToCart({
+                
+                  _id: details._id,
+                  title: details.title,
+                  image: details.image,
+                  price: details.price,
+                  quantity: baseQty,
+                  description: details.description,
+                
+              })
+            ) & toast.success(`${details.title} agregado`)
+            } 
+            className="bg-yellow-200 px-6 py-3  active:bg-white active:text-yellow-500">
               Agregar al carrito
             </button>
           </div>
@@ -78,6 +95,19 @@ export const Product = () => {
           </p>
         </div>
       </div>
+      < ToastContainer 
+      position="bottom-right"
+      autoClose = {5000}
+      hideProgressBar = {false}
+      newestOnTop = {false}
+      closeOnClick
+      rtl = {false}
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover
+      theme="colored"
+      />
+      
     </div>
   );
 };
