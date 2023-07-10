@@ -51,11 +51,13 @@ export const Header = () => {
             </span>
           </div>
           </Link>
-          <img
+         <Link to="/login">
+         <img
             className="w-16 h-16 rounded-full"
             src="https://eastlancashirefreemasons.org/wp-content/uploads/2022/11/Manchester-Mason-VWBro-Nolan-Morrison-celebrates-Sixty-Years-in-Freemasonry-Header.jpeg"
             alt="img"
           />
+         </Link>
         </div>
       </div>
      
